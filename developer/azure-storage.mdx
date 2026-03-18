@@ -12,9 +12,10 @@ The platform uses Azure Blob Storage for two distinct purposes:
 
 Media images are hosted in the `webcms` Azure Blob container and served from:
 
-```
+```bash
 https://webcms.blob.core.windows.net/media
 ```
+
 
 This base URL is set with `NUXT_PUBLIC_MEDIA_BASE_URL` and exposed to the client. The `@nuxt/image` module is configured to allow this domain:
 
@@ -45,13 +46,13 @@ When a customer submits a price request with a file, the Nitro handler uploads i
 
 Each attachment is stored under:
 
-```
+```bash
 {baseFolder}/{requestKey}/{filename}
 ```
 
 For example:
 
-```
+```bash
 price-requests/pr-2026-03-abc123/artwork-final.pdf
 ```
 
@@ -67,7 +68,7 @@ Defaults:
 
 The following file types are accepted by default:
 
-```
+```bash
 application/pdf
 image/jpeg
 image/png
