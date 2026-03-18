@@ -1,0 +1,170 @@
+---
+title: "Local development setup"
+description: "Set up the Reprodisseny platform for local development."
+---
+
+<Warning>
+  Never commit `.env` files or secrets to version control. Use a secrets manager or a shared secure vault to distribute credentials to the team.
+</Warning>
+
+## Prerequisites
+
+- Node.js 20 or later
+- Access to the Azure App registration (tenant ID, client ID, client secret)
+- Access to the SharePoint sites for CMS and CRM data
+
+## Setup steps
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/devRepro/reprodisseny.git
+    cd reprodisseny
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    <CodeGroup>
+
+    ```bash npm
+    npm install
+    ```
+
+    ```bash pnpm
+    pnpm install
+    ```
+
+    ```bash yarn
+    yarn install
+    ```
+
+    </CodeGroup>
+
+    The `postinstall` script automatically runs `nuxt prepare` to generate type declarations.
+  </Step>
+
+  <Step title="Create your environment file">
+    Copy the example below to `.env` in the project root and fill in each value.
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    See the [Environment variables](#environment-variables) section below for a full reference.
+  </Step>
+
+  <Step title="Sync SharePoint content">
+    Pull categories and products from SharePoint into `cms/catalog.json`:
+
+    ```bash
+    npm run cms:sync
+    ```
+
+    This script reads from the CMS SharePoint site using Microsoft Graph and writes `cms/catalog.json` and `cms/routes.json`. It must run before the dev server starts so that content is available.
+  </Step>
+
+  <Step title="Start the development server">
+    ```bash
+    npm run dev
+    ```
+
+    The server starts at `http://localhost:3000`.
+  </Step>
+</Steps>
+
+## Environment variables
+
+### Azure / Microsoft Graph
+
+Required for SharePoint access (CMS sync, price request CRM, and optional email via Graph).
+
+```bash
+AZURE_TENANT_ID=        # Azure Active Directory tenant ID
+AZURE_CLIENT_ID=        # App registration client ID
+AZURE_CLIENT_SECRET=    # App registration client secret
+```
+
+### SharePoint CRM (price requests)
+
+```bash
+CRM_SITE_ID=                              # SharePoint site ID for the CRM site
+CRM_SITE_HOSTNAME=reprodisseny.sharepoint.com   # default
+CRM_SITE_PATH=/sites/portal                     # default
+CRM_PRICE_REQUESTS_LIST_ID=             # List ID for quote submissions
+CRM_PRICE_REQUESTS_COMMENTS_LIST_ID=    # List ID for request comments
+
+# Attachments library
+CRM_ATTACHMENTS_LIBRARY_LIST_ID=
+CRM_ATTACHMENTS_LIBRARY_DRIVE_ID=
+CRM_ATTACHMENTS_LIBRARY_NAME=AssetsProducts     # default
+CRM_ATTACHMENTS_BASE_FOLDER=price-requests      # default
+CRM_ATTACHMENTS_MAX_FILE_BYTES=26214400         # 25 MB default
+CRM_ATTACHMENTS_ALLOWED_MIME_TYPES=application/pdf,image/jpeg,image/png,image/svg+xml,application/zip,application/postscript
+```
+
+### SharePoint CMS (content)
+
+```bash
+CMS_SITE_ID=
+CMS_SITE_HOSTNAME=reprodisseny.sharepoint.com
+CMS_SITE_PATH=
+CMS_CATEGORIES_LIST_ID=
+CMS_PRODUCTS_LIST_ID=
+CMS_ASSETS_LIST_ID=
+```
+
+The sync script (`scripts/sync-sharepoint-to-cms.mjs`) reads these from a separate `.env.imports` file:
+
+```bash
+# .env.imports (used by cms:sync only)
+TENANT_ID=
+CLIENT_ID=
+CLIENT_SECRET=
+SHAREPOINT_SITE_ID=
+SP_LIST_CATEGORIES_ID=
+SP_LIST_PRODUCTS_ID=
+```
+
+### Email
+
+```bash
+MAIL_PROVIDER=smtp          # or: graph
+MAIL_TO=                    # recipient address for quote notifications
+
+# SMTP (when MAIL_PROVIDER=smtp)
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_SECURE=0               # set to 1 for port 465
+SMTP_USER=
+SMTP_PASS=
+SMTP_FROM=
+
+# Microsoft Graph / SendGrid (when MAIL_PROVIDER=graph)
+MAIL_SENDER_UPN=            # sender UPN in Azure AD
+```
+
+### Public / frontend
+
+```bash
+NUXT_PUBLIC_SITE_URL=http://localhost:3000
+NUXT_PUBLIC_BASE_URL=http://localhost:3000
+NUXT_PUBLIC_MEDIA_BASE_URL=https://webcms.blob.core.windows.net/media
+
+GOOGLE_MAPS_API_KEY=
+GOOGLE_MAPS_PLACE_ID=
+```
+
+## Available npm scripts
+
+| Script | Description |
+|---|---|
+| `npm run dev` | Start development server at `http://localhost:3000` |
+| `npm run build` | Run `cms:sync` then build for Node.js server |
+| `npm run generate` | Run `cms:sync` then generate static output |
+| `npm run preview` | Preview the production build locally |
+| `npm run cms:sync` | Fetch SharePoint data and write `cms/catalog.json` |
+| `npm run validate:all` | Run all validation scripts (MD structure, SEO, categories) |
+| `npm run generate:products` | Scaffold product MDX files from catalog data |
+| `npm run validate:products` | Validate generated product files |
+| `npm run dev:clean` | Clear Nuxt and Vite caches then start dev server |
+| `npm run fix:types` | Full reinstall + `nuxi prepare` to reset type generation |

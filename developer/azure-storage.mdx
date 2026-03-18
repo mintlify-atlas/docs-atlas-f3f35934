@@ -1,0 +1,112 @@
+---
+title: "Azure Blob Storage"
+description: "File storage configuration for media assets and quote request attachments."
+---
+
+The platform uses Azure Blob Storage for two distinct purposes:
+
+1. **Media assets** — product images and category images served via a public CDN URL.
+2. **Quote request attachments** — files uploaded by customers when submitting a price request, stored in a SharePoint Document Library Drive.
+
+## Media assets
+
+Media images are hosted in the `webcms` Azure Blob container and served from:
+
+```
+https://webcms.blob.core.windows.net/media
+```
+
+This base URL is set with `NUXT_PUBLIC_MEDIA_BASE_URL` and exposed to the client. The `@nuxt/image` module is configured to allow this domain:
+
+```typescript
+// nuxt.config.ts
+image: {
+  provider: "ipx",
+  domains: ["webcms.blob.core.windows.net"],
+},
+```
+
+Reference images in components with the public base URL:
+
+```vue
+<NuxtImg
+  :src="`${$config.public.mediaBaseUrl}/categories/gran-formato.jpg`"
+  alt="Gran formato printing"
+  width="800"
+  height="600"
+/>
+```
+
+## Quote request attachments
+
+When a customer submits a price request with a file, the Nitro handler uploads it to a SharePoint Document Library that is backed by a OneDrive/SharePoint Drive. The Drive is accessed through the Microsoft Graph API using the configured drive ID.
+
+### Folder structure
+
+Each attachment is stored under:
+
+```
+{baseFolder}/{requestKey}/{filename}
+```
+
+For example:
+
+```
+price-requests/pr-2026-03-abc123/artwork-final.pdf
+```
+
+Defaults:
+
+| Setting | Default value |
+|---|---|
+| Library name | `AssetsProducts` |
+| Base folder | `price-requests` |
+| Max file size | 25 MB (26,214,400 bytes) |
+
+### Allowed MIME types
+
+The following file types are accepted by default:
+
+```
+application/pdf
+image/jpeg
+image/png
+image/svg+xml
+application/zip
+application/postscript
+```
+
+The allowed list is comma-separated in `CRM_ATTACHMENTS_ALLOWED_MIME_TYPES` and split at runtime.
+
+### File metadata stored in SharePoint
+
+After a successful upload, the CRM price request list item is updated with:
+
+| Field | SharePoint column | Description |
+|---|---|---|
+| `HasAttachment` | `CRM_PR_HAS_ATTACHMENT_FIELD` | Boolean flag |
+| `PrimaryFileDriveItemId` | `CRM_PR_PRIMARY_FILE_DRIVE_ITEM_ID_FIELD` | Graph Drive item ID |
+| `PrimaryFileWebUrl` | `CRM_PR_PRIMARY_FILE_WEB_URL_FIELD` | Direct SharePoint URL |
+| `PrimaryFileName` | `CRM_PR_PRIMARY_FILE_NAME_FIELD` | Original filename |
+| `PrimaryFileMimeType` | `CRM_PR_PRIMARY_FILE_MIME_TYPE_FIELD` | MIME type |
+| `PrimaryFileSize` | `CRM_PR_PRIMARY_FILE_SIZE_FIELD` | File size in bytes |
+
+## Environment variables
+
+```bash
+# Public media CDN
+NUXT_PUBLIC_MEDIA_BASE_URL=https://webcms.blob.core.windows.net/media
+
+# Attachment library (SharePoint Drive)
+CRM_ATTACHMENTS_LIBRARY_LIST_ID=
+CRM_ATTACHMENTS_LIBRARY_DRIVE_ID=
+CRM_ATTACHMENTS_LIBRARY_NAME=AssetsProducts
+CRM_ATTACHMENTS_BASE_FOLDER=price-requests
+CRM_ATTACHMENTS_MAX_FILE_BYTES=26214400
+CRM_ATTACHMENTS_ALLOWED_MIME_TYPES=application/pdf,image/jpeg,image/png,image/svg+xml,application/zip,application/postscript
+
+# Azure credentials (required for Drive uploads)
+AZURE_TENANT_ID=
+AZURE_CLIENT_ID=
+AZURE_CLIENT_SECRET=
+```

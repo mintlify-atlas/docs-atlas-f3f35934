@@ -1,0 +1,166 @@
+---
+title: "Exporting to PDF"
+description: "Recommended PDF export settings for print production."
+---
+
+PDF is the preferred delivery format at Reprodisseny. A correctly exported PDF embeds all fonts, includes bleed and crop marks, uses CMYK colour, and resolves transparencies — making it self-contained and ready for the RIP without manual intervention.
+
+## Export process
+
+<Steps>
+  <Step title="Set document colour to CMYK">
+    Before exporting, confirm that your document is in CMYK colour mode. Embedded images should also be CMYK or greyscale. Converting to CMYK at the document level — rather than letting the PDF export do it — gives you full control over the result.
+
+    See [Color profiles and color management](/guides/color-profiles) for guidance on CMYK conversion.
+  </Step>
+
+  <Step title="Verify bleed and crop marks settings">
+    Your document must have 3 mm of bleed configured before export. In the export dialog:
+
+    - Enable **Use Document Bleed Settings** (or enter `3 mm` manually if bleed was not set in the document).
+    - Enable **Crop Marks** so the production team can identify the trim position.
+    - Enable **Bleed Marks** if your application offers them separately.
+
+    See [Bleed and margins](/guides/bleed-margins) for how to set up bleed in your document.
+  </Step>
+
+  <Step title="Choose the correct PDF standard">
+    Use one of these standards for print production:
+
+    | Standard | When to use |
+    |----------|-------------|
+    | **PDF/X-1a** | Maximum compatibility; all colours converted to CMYK, no RGB or spot colours left unresolved, transparencies flattened. Use this when in doubt. |
+    | **PDF/X-4** | Supports live transparencies and ICC colour management. Use if the production workflow supports it and you need to preserve transparency layers. |
+
+    Avoid exporting with the **Press Quality** preset without reviewing settings — it does not enforce CMYK and may leave RGB images unconverted.
+  </Step>
+
+  <Step title="Embed fonts">
+    In all applications, enable **Embed All Fonts** (or equivalent). Alternatively, convert all text to outlines before exporting — this eliminates the font dependency entirely.
+
+    After export, open the PDF in Adobe Acrobat or a PDF viewer and visually confirm that all text renders correctly, especially special characters, ligatures, and small print.
+  </Step>
+
+  <Step title="Handle transparencies">
+    If your design uses drop shadows, feathered edges, or blending modes, confirm how your application handles transparencies on export.
+
+    - **PDF/X-1a** flattens transparencies automatically.
+    - **PDF/X-4** preserves live transparencies.
+    - If the print RIP has trouble with live transparencies, flatten manually before export: in InDesign use **Object → Flatten Transparency**, or export as PDF/X-1a.
+
+    <Note>
+      The Reprodisseny team will flag any transparency issues during pre-press. When in doubt, flatten.
+    </Note>
+  </Step>
+
+  <Step title="Verify the exported PDF">
+    Before sending the file, open the PDF and check:
+
+    - Crop marks are visible and the bleed area extends past them.
+    - All text is legible and has not reflowed or substituted.
+    - Colours look correct (allow for screen-vs-print difference; check CMYK values in Acrobat's Output Preview).
+    - No missing images or low-resolution warnings (Acrobat's Preflight tool can check this).
+    - File size is reasonable — a heavily compressed PDF may have degraded image quality.
+  </Step>
+</Steps>
+
+## Application-specific settings
+
+<Tabs>
+  <Tab title="Adobe InDesign">
+    **File → Export → Adobe PDF (Print)**
+
+    Recommended settings:
+
+    - **Adobe PDF Preset:** PDF/X-1a:2001 (or create a custom preset based on it)
+    - **Standard:** PDF/X-1a:2001
+    - **Compatibility:** Acrobat 4 (PDF 1.3) for X-1a; Acrobat 5 (PDF 1.4) for X-4
+
+    **Marks and Bleeds tab:**
+    - Crop Marks: ✓
+    - Bleed Marks: ✓
+    - Use Document Bleed Settings: ✓ (confirm value is 3 mm)
+
+    **Output tab:**
+    - Color Conversion: Convert to Destination
+    - Destination: a CMYK output profile (e.g. ISO Coated v2 or your press profile)
+    - Include Profiles: ✓
+
+    **Advanced tab:**
+    - Transparency Flattener: High Resolution (for X-1a)
+
+    InDesign's PDF/X-1a preset is the most reliable choice for sending files to Reprodisseny without further negotiation about colour profiles.
+  </Tab>
+
+  <Tab title="Adobe Illustrator">
+    **File → Save a Copy → Adobe PDF**
+
+    Recommended settings:
+
+    - **Adobe PDF Preset:** PDF/X-1a:2001
+    - **Standard:** PDF/X-1a:2001
+
+    **Marks and Bleeds tab:**
+    - Trim Marks: ✓
+    - Use Document Bleed Settings: ✓
+
+    **Output tab:**
+    - Output Intent Profile Name: a CMYK profile (e.g. ISO Coated v2)
+
+    **Advanced tab:**
+    - Preset: High Resolution (flattens transparencies)
+
+    Note: Illustrator's artboard is the trim size. Ensure the document bleed is set to 3 mm (**File → Document Setup → Bleed**) before exporting.
+  </Tab>
+
+  <Tab title="Adobe Photoshop">
+    Photoshop is primarily a raster image editor, not a page layout tool. For print-ready PDFs from Photoshop:
+
+    - Flatten all layers (**Layer → Flatten Image**).
+    - Confirm mode is CMYK (**Image → Mode → CMYK Color**).
+    - Confirm resolution is 300 ppi at the required print size (**Image → Image Size**, Resample unchecked).
+    - Go to **File → Save As → Photoshop PDF**.
+    - In the Save Adobe PDF dialog, select **PDF/X-1a:2001** preset.
+    - Enable **Preserve Photoshop Editing Capabilities** only if you need to re-edit — this increases file size significantly and is not needed for production.
+
+    For multi-page documents or designs requiring text and vector elements, use InDesign or Illustrator instead.
+  </Tab>
+
+  <Tab title="Affinity Publisher">
+    **File → Export → PDF**
+
+    Recommended settings:
+
+    - **Preset:** PDF/X-1a or PDF (for print)
+    - **Colour Space:** CMYK
+    - **ICC Profile:** select an appropriate CMYK output profile
+
+    **More tab:**
+    - Include Bleed: ✓ (confirm 3 mm is configured in Document Setup)
+    - Crop Marks: ✓
+    - Flatten all transparency: ✓ (for X-1a compatibility)
+
+    Affinity Publisher's PDF export is reliable for print. Confirm the bleed is set in **File → Document Setup → Margins & Bleed** before exporting.
+  </Tab>
+</Tabs>
+
+## Important warnings
+
+<Warning>
+  **Avoid exporting from Microsoft Word or PowerPoint for production print jobs.** PDF files generated by Office applications embed fonts inconsistently, do not support bleed or crop marks, and often produce RGB output. The resulting print quality is unpredictable.
+
+  If your content originates in Word or PowerPoint, have it recreated in InDesign, Illustrator, or Affinity Publisher before sending for print production.
+</Warning>
+
+## Quick reference: recommended export settings
+
+| Setting | Value |
+|---------|-------|
+| PDF standard | PDF/X-1a:2001 (preferred) or PDF/X-4 |
+| Colour mode | CMYK |
+| Bleed | 3 mm (all sides) |
+| Crop marks | Yes |
+| Font embedding | Embed all, or convert to outlines |
+| Image resolution | 300 ppi at final print size |
+| Transparencies | Flatten (PDF/X-1a) or live (PDF/X-4) |
+| ICC profile | Include CMYK output profile |

@@ -1,0 +1,79 @@
+---
+title: "Image Resolution"
+description: "Resolution requirements for small-format and large-format print jobs."
+---
+
+Image resolution determines whether a photo or graphic looks sharp or pixelated when printed. The key rule is that resolution is always measured **at the final print size**, not at the size the image was originally captured or created.
+
+## Standard resolution: 300 ppi
+
+For small and medium format printing — flyers, brochures, business cards, posters up to A0, and most packaging — the standard is **300 ppi (pixels per inch) at the final print size**.
+
+This means:
+
+- A photo that will print at 100 × 100 mm must be at least **1181 × 1181 pixels** (100 mm ÷ 25.4 mm/inch × 300 ppi).
+- A photo that will print at 200 × 300 mm must be at least **2362 × 3543 pixels**.
+
+<Note>
+  300 ppi is a minimum, not a maximum. Higher-resolution images are fine — the printer will downsample to the output resolution. Lower than 200 ppi will produce visibly soft or pixelated results at normal viewing distances.
+</Note>
+
+## Large-format resolution
+
+Large-format prints (banners, backdrops, roll-ups, outdoor signage) are designed to be viewed from a distance. The human eye cannot resolve fine detail at distance, so a lower ppi is acceptable and keeps files at a manageable size.
+
+| Viewing distance | Recommended resolution |
+|-----------------|------------------------|
+| Close-up (under 1 m) | 150–300 ppi at final size |
+| Medium (1–3 m) | 100–150 ppi at final size |
+| Far (3 m and beyond) | 72–100 ppi at final size |
+
+<Tip>
+  For a banner that will hang at the back of an exhibition stand viewed from 3+ metres, 72–100 ppi at the finished banner size is sufficient and will produce a file that is much easier to handle than a 300 ppi equivalent.
+</Tip>
+
+## How to check resolution
+
+<AccordionGroup>
+  <Accordion title="Adobe Photoshop">
+    Open the image and go to **Image → Image Size**. Make sure **Resample** is unchecked. Enter the intended print width or height and read the Resolution field. If the value is below 300 ppi (for small format), the image needs to be replaced with a higher-resolution version.
+
+    Do not resample upward (increasing pixel count) to reach 300 ppi — this adds interpolated pixels that do not contain real detail, and the result will still look soft when printed.
+  </Accordion>
+
+  <Accordion title="Adobe Illustrator">
+    For linked or embedded raster images, select the image and check the **Document Info** panel (**Window → Document Info**). Change the dropdown to **Linked Images** or **Embedded Images** to see the effective resolution at the placed size.
+
+    Vector artwork (paths, shapes, type) in Illustrator is resolution-independent and does not require a ppi check.
+  </Accordion>
+
+  <Accordion title="Adobe InDesign">
+    Open the **Links** panel (**Window → Links**). Select a link and expand the **Link Info** section at the bottom of the panel. The **Effective PPI** value shows the resolution of the image at its current placed size — this is the number that matters for print, not the raw image resolution.
+
+    If **Effective PPI** is below 300 for a small-format job, either replace the image or reduce the frame size.
+  </Accordion>
+
+  <Accordion title="Affinity Publisher">
+    Select the placed image and check the **Transform** panel for the current frame dimensions. Then use **Resource Manager** (**File → Resource Manager**) to review the source resolution of each linked file. Calculate effective PPI: source pixels ÷ print size in inches.
+  </Accordion>
+</AccordionGroup>
+
+## What not to do
+
+<Warning>
+  Avoid the following — they are the most common causes of pixelated print output:
+
+  - **Scaling a low-resolution image up** in your layout. If an image at 100% is only 150 ppi, enlarging it to 150% makes the effective resolution drop to 100 ppi.
+  - **Using screenshots** as placed images. Screen captures are typically 72–96 ppi and will print poorly at any significant size.
+  - **Downloading images from websites or social media**. These are compressed and sized for screen display, not print.
+  - **Converting a low-res image to a higher resolution in Photoshop** by resampling up. This does not add real detail.
+</Warning>
+
+## Resolution vs file size
+
+Higher resolution means larger files. For very large documents with many high-resolution images, file sizes can become unwieldy. Practical guidance:
+
+- For small-format jobs: 300 ppi CMYK TIFF or JPEG at quality 10–12 is a good target. Expect 5–30 MB per full-page image.
+- For large-format jobs: Use 100–150 ppi at final size. Compress JPEG at quality 8–10 to reduce size without visible quality loss at viewing distance.
+- Flatten layers and merge groups in Photoshop before placing images in InDesign or Illustrator — this significantly reduces file size and speeds up PDF export.
+- When sending files to Reprodisseny, the maximum upload size for the quote form is **25 MB**. For larger files, contact the team to arrange an alternative transfer method.

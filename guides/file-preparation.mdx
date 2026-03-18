@@ -1,0 +1,138 @@
+---
+title: "Preparing Files for Print"
+description: "A complete guide to preparing print-ready files that pass pre-press without corrections."
+---
+
+Sending a well-prepared file avoids delays, re-layout costs, and unexpected colour shifts. This guide covers the four critical areas of print file preparation and includes a quick-reference checklist you can use before every submission.
+
+For deeper coverage of individual topics, see:
+- [Bleed and margins](/guides/bleed-margins)
+- [Image resolution](/guides/resolution)
+- [Exporting to PDF](/guides/pdf-export)
+- [Color profiles and color management](/guides/color-profiles)
+
+## Preparation steps
+
+<Steps>
+  <Step title="Set up bleed and margins">
+    **Bleed** is extra artwork that extends beyond the trim edge, allowing for slight movement during cutting. Without it, white edges appear on finished pieces.
+
+    What to do:
+    - Add **3 mm of bleed** on all sides (standard for most Reprodisseny products).
+    - Keep text, logos, and important elements at least **3–5 mm inside** the trim line (safety zone).
+    - Extend background colours and images fully into the bleed area.
+
+    What to avoid:
+    - Placing text or logos flush against the cut line — even a 1 mm shift during cutting will clip them.
+    - Forgetting bleed on bleed-to-edge designs. If the design has a white border by intention, no bleed is needed.
+
+    <Note>
+      Large-format jobs (banners, roll-ups) may require different bleed values. Check with the team if you are unsure.
+    </Note>
+
+    See [Bleed and margins](/guides/bleed-margins) for a detailed explanation of the three zones.
+  </Step>
+
+  <Step title="Work in CMYK">
+    Print presses use four inks — Cyan, Magenta, Yellow, and Black (CMYK). RGB files are converted automatically at output, which can produce unexpected colour shifts.
+
+    What to do:
+    - Set your document colour mode to **CMYK** from the start.
+    - For critical brand colours, reference **Pantone** values in addition to CMYK.
+    - Use **100% K only** for small black text — avoid rich black mixes (e.g. C60 M40 Y40 K100) on fine typography, as slight misregistration makes it look blurry.
+
+    What to avoid:
+    - Sending files in RGB and expecting exact colour matching.
+    - Using rich black on body text or small headlines.
+    - Leaving spot colours (Pantone) unflattened if the job does not require spot printing.
+
+    <Warning>
+      RGB-to-CMYK conversion is done automatically if you send an RGB file, but the result may differ noticeably from what you see on screen — especially for saturated blues, greens, and oranges. Always convert to CMYK yourself for predictable results.
+    </Warning>
+
+    See [Color profiles and color management](/guides/color-profiles) for full guidance.
+  </Step>
+
+  <Step title="Check image resolution">
+    Low-resolution images print visibly pixelated. Resolution must be measured **at the final print size**, not the original image dimensions.
+
+    What to do:
+    - Use images at **300 ppi at final print size** for small and medium format.
+    - Embed all linked images in the document, or package the file with all links.
+    - Verify resolution in your application (Photoshop: Image → Image Size; InDesign: Links panel).
+
+    What to avoid:
+    - Scaling a 72 ppi web image up to fill a print layout.
+    - Using screenshots, images copied from websites, or social media exports.
+    - Placing a low-resolution image and relying on the RIP to compensate.
+
+    <Tip>
+      Large-format prints (banners, backdrops) are viewed from a distance. 100–150 ppi at final size is often sufficient and keeps file sizes manageable.
+    </Tip>
+
+    See [Image resolution](/guides/resolution) for format-specific guidance.
+  </Step>
+
+  <Step title="Handle fonts correctly">
+    Missing fonts are one of the most common pre-press problems. The safest approach is to eliminate the dependency entirely.
+
+    What to do:
+    - **Convert all text to outlines** (curves/paths) before exporting — or embed fonts in the PDF.
+    - After exporting, open the PDF and check that all text renders correctly, especially special characters and ligatures.
+    - Review line spacing and kerning after converting to outlines, as some applications adjust metrics on export.
+
+    What to avoid:
+    - Sending native files (AI, INDD, PSD) without packaging fonts.
+    - Using trial fonts or fonts without a commercial print licence.
+    - Converting to outlines and not proofreading — text cannot be edited afterwards.
+
+    <Note>
+      When you embed fonts in a PDF rather than converting to outlines, the font data is included in the file. Either approach is acceptable, but outlines are the safest option if you are unsure about font licensing.
+    </Note>
+  </Step>
+</Steps>
+
+## Recommended specifications
+
+| Setting | Recommended value |
+|---------|------------------|
+| Delivery format | PDF (preferred) |
+| Colour profile | CMYK (with ICC profile if required) |
+| Bleed | 3 mm (standard) |
+| Crop marks | Yes, if the design requires them |
+| Image resolution | 300 ppi at final print size |
+| Transparencies | Flatten if RIP issues occur |
+
+For PDF export settings see [Exporting to PDF](/guides/pdf-export).
+
+## Final checklist
+
+Before sending your file, confirm:
+
+- PDF at final size with bleed included (if the design bleeds to the edge)
+- Document colour mode is CMYK; images are CMYK or greyscale
+- All images are at least 300 ppi at final print size
+- Fonts converted to outlines or embedded in the PDF
+- No text or important elements within 3 mm of the trim edge
+- Crop marks included (if the file is at final size with bleed)
+- Transparencies flattened (if required by the job)
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Do I need to include crop marks?">
+    If the file is at final size and includes bleed, crop marks help the production team identify the trim position. A well-prepared PDF with marks works perfectly. If you are sending a file without bleed (for example, a white-bordered design), crop marks are not necessary.
+  </Accordion>
+
+  <Accordion title="What bleed value should I use?">
+    The standard bleed at Reprodisseny is 3 mm on all sides. For special or large-format products, the required bleed may vary. If you are unsure, contact the team with the product name and they will confirm the correct value.
+  </Accordion>
+
+  <Accordion title="Should I use RGB or CMYK?">
+    CMYK is recommended for all print jobs to ensure colour consistency. For critical corporate colours, specify Pantone references in addition to CMYK values. If you work in RGB (for example, in Photoshop for photo editing), convert to CMYK before exporting your final PDF.
+  </Accordion>
+
+  <Accordion title="What resolution should my images have?">
+    300 ppi at the final print size is the standard for small and medium format. For large-format printing (banners, backdrops), the acceptable resolution depends on the intended viewing distance — 100–150 ppi is often sufficient. See [Image resolution](/guides/resolution) for detailed guidance.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,135 @@
+---
+title: "SharePoint CMS integration"
+description: "How the platform connects to SharePoint for content management and CRM."
+---
+
+The platform uses two separate SharePoint sites accessed through the Microsoft Graph API:
+
+- **CMS site** — source of truth for categories, products, and page content. Read at build time by the sync script.
+- **CRM site** — stores price request submissions, comments, and attachment metadata. Written at runtime by Nitro server routes.
+
+<Note>
+  Both sites require an Azure App registration with the `Sites.ReadWrite.All` and `Files.ReadWrite.All` Microsoft Graph application permissions granted by a tenant administrator.
+</Note>
+
+## CMS site
+
+The CMS site holds three SharePoint Lists:
+
+| List | Env var | Purpose |
+|---|---|---|
+| Categories | `CMS_CATEGORIES_LIST_ID` | Product category tree, slugs, SEO fields, tabs |
+| Products | `CMS_PRODUCTS_LIST_ID` | Individual product records with pricing and attributes |
+| Assets | `CMS_ASSETS_LIST_ID` | Media asset metadata |
+
+### Sync script
+
+`scripts/sync-sharepoint-to-cms.mjs` fetches all published items from the CMS Lists and writes two files:
+
+- `cms/catalog.json` — full catalog with categories and products
+- `cms/routes.json` — flat list of URL paths for Nuxt pre-rendering
+
+```bash
+npm run cms:sync
+```
+
+This script is automatically called by `npm run build` and `npm run generate`. For local development, run it once after cloning and again whenever SharePoint content changes.
+
+The script uses `@azure/identity` `ClientSecretCredential` and `@microsoft/microsoft-graph-client` to authenticate:
+
+```javascript
+import { ClientSecretCredential } from "@azure/identity"
+import { Client } from "@microsoft/microsoft-graph-client"
+
+const credential = new ClientSecretCredential(TENANT_ID, CLIENT_ID, CLIENT_SECRET)
+const graph = Client.init({
+  authProvider: async (done) => {
+    const token = await credential.getToken("https://graph.microsoft.com/.default")
+    done(null, token.token)
+  },
+})
+```
+
+It paginates Graph results with `$top=999` and retries throttled requests (HTTP 429/503) with exponential backoff up to 6 attempts.
+
+### Category data shape
+
+Each category in `cms/catalog.json` includes:
+
+```typescript
+{
+  id: string
+  slug: string           // URL segment, e.g. "gran-formato"
+  path: string           // full path, e.g. "/categorias/gran-formato"
+  parent?: string        // parent slug for nested categories
+  type: "categoria" | "subcategoria"
+  title: string
+  nav: string            // short nav label
+  order: number
+  isPublished: boolean
+  tabs: TabItem[]        // content tabs (from TabsJson or parsed BodyMd)
+  image: { src, width, height, alt }
+  seo: { metaTitle, metaDescription, canonical, schema, keywords }
+  faqs: FaqItem[]
+}
+```
+
+## CRM site
+
+The CRM site stores operational data created at runtime:
+
+| List | Env var | Purpose |
+|---|---|---|
+| Price requests | `CRM_PRICE_REQUESTS_LIST_ID` | One item per quote submission |
+| Comments | `CRM_PRICE_REQUESTS_COMMENTS_LIST_ID` | Internal notes on requests |
+| Attachments library | `CRM_ATTACHMENTS_LIBRARY_LIST_ID` | Document library for uploaded files |
+
+The `createPriceRequest` service writes to the price requests list and optionally uploads a file to the attachments Drive via Graph.
+
+## ISR caching strategy
+
+Content served from SharePoint is cached at two levels:
+
+```typescript
+// nuxt.config.ts
+routeRules: {
+  "/categorias/**":     { isr: 600 },   // pages regenerate every 10 minutes
+  "/api/categorias/**": { swr: 300 },   // API responses stale-while-revalidate 5 min
+  "/productos/**":      { isr: 600 },
+  "/api/productos/**":  { swr: 300 },
+}
+```
+
+This means a content change in SharePoint will be reflected on the site within 10 minutes without a full rebuild.
+
+## Environment variables
+
+```bash
+# Azure authentication
+AZURE_TENANT_ID=
+AZURE_CLIENT_ID=
+AZURE_CLIENT_SECRET=
+
+# CMS site
+CMS_SITE_ID=
+CMS_SITE_HOSTNAME=reprodisseny.sharepoint.com
+CMS_SITE_PATH=
+CMS_CATEGORIES_LIST_ID=
+CMS_PRODUCTS_LIST_ID=
+CMS_ASSETS_LIST_ID=
+
+# CRM site
+CRM_SITE_ID=
+CRM_SITE_HOSTNAME=reprodisseny.sharepoint.com
+CRM_SITE_PATH=/sites/portal
+CRM_PRICE_REQUESTS_LIST_ID=
+CRM_PRICE_REQUESTS_COMMENTS_LIST_ID=
+
+# Sync script (.env.imports)
+TENANT_ID=
+CLIENT_ID=
+CLIENT_SECRET=
+SHAREPOINT_SITE_ID=
+SP_LIST_CATEGORIES_ID=
+SP_LIST_PRODUCTS_ID=
+```

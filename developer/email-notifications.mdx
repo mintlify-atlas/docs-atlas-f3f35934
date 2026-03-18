@@ -1,0 +1,94 @@
+---
+title: "Email notifications"
+description: "Email configuration for contact forms and quote request notifications."
+---
+
+The platform supports two email providers, selected at runtime by the `MAIL_PROVIDER` environment variable. The same Nitro service layer handles both; only the transport differs.
+
+## Selecting a provider
+
+```bash
+MAIL_PROVIDER=smtp    # use SMTP transport
+MAIL_PROVIDER=graph   # use Microsoft Graph / SendGrid
+```
+
+<Tabs>
+  <Tab title="SMTP">
+    SMTP is the simplest option for self-hosted or third-party relay services (Mailgun, Postmark, etc.).
+
+    ### Required variables
+
+    ```bash
+    MAIL_PROVIDER=smtp
+    SMTP_HOST=smtp.example.com
+    SMTP_PORT=587
+    SMTP_SECURE=0           # set to 1 for TLS on port 465
+    SMTP_USER=user@example.com
+    SMTP_PASS=yourpassword
+    SMTP_FROM=noreply@reprodisseny.com
+    MAIL_TO=quotes@reprodisseny.com
+    ```
+
+    `SMTP_SECURE=1` enables TLS. Use `0` for STARTTLS on port 587.
+
+    ### Runtime config mapping
+
+    ```typescript
+    // nuxt.config.ts
+    mail: {
+      provider: process.env.MAIL_PROVIDER,
+      host:     process.env.SMTP_HOST,
+      port:     process.env.SMTP_PORT,
+      secure:   process.env.SMTP_SECURE === "1",
+      user:     process.env.SMTP_USER,
+      pass:     process.env.SMTP_PASS,
+      from:     process.env.SMTP_FROM,
+      to:       process.env.MAIL_TO,
+    }
+    ```
+  </Tab>
+
+  <Tab title="Microsoft Graph / SendGrid">
+    The `graph` provider sends email through the Microsoft Graph `sendMail` endpoint, authenticated with the same Azure App registration used for SharePoint.
+
+    `@sendgrid/mail` is available as an additional transport if configured.
+
+    ### Required variables
+
+    ```bash
+    MAIL_PROVIDER=graph
+    MAIL_SENDER_UPN=notifications@reprodisseny.com  # sender UPN in Azure AD
+    MAIL_TO=quotes@reprodisseny.com
+
+    # Azure credentials (shared with SharePoint integration)
+    AZURE_TENANT_ID=
+    AZURE_CLIENT_ID=
+    AZURE_CLIENT_SECRET=
+    ```
+
+    ### Prerequisites
+
+    The Azure App registration must have the `Mail.Send` Microsoft Graph application permission granted by a tenant administrator. The `MAIL_SENDER_UPN` account must exist in the tenant.
+
+    <Note>
+      The `graph` provider sends email as the UPN user via the `/users/{upn}/sendMail` Graph endpoint. It does not require an SMTP relay or SendGrid API key when using Graph directly.
+    </Note>
+  </Tab>
+</Tabs>
+
+## Contact form list
+
+In addition to email, contact form submissions can be written to a SharePoint List configured with:
+
+```bash
+SP_LIST_CONTACT_ID=    # SharePoint List ID for contact form entries
+```
+
+## Triggered notifications
+
+| Event | Recipient | Provider used |
+|---|---|---|
+| New price request submitted | `MAIL_TO` | Configured provider |
+| Contact form submitted | `MAIL_TO` | Configured provider |
+
+The email body includes the customer name, email, phone, company, product details, and the quote message.

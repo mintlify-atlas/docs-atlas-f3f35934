@@ -1,0 +1,216 @@
+---
+title: "POST /api/price-requests"
+description: "Submit a quote request with optional file attachment."
+---
+
+Submits a new price (quote) request and optionally uploads a design or brief file to Azure Blob/SharePoint Drive. The request is written to the CRM SharePoint List and a notification email is sent.
+
+**Method:** `POST`  
+**Path:** `/api/price-requests`  
+**Content-Type:** `multipart/form-data`
+
+<Note>
+  This endpoint is rate-limited to **10 requests per 600 seconds per IP address** using a local SQLite database (better-sqlite3). Exceeding the limit returns HTTP 429.
+</Note>
+
+## Request
+
+The request body must be `multipart/form-data` with the following parts:
+
+### Form parts
+
+<ParamField body="payload" type="string" required>
+  JSON-serialised object matching the payload schema below. Must be sent as a `text/plain` or `application/json` multipart part named `payload`.
+</ParamField>
+
+<ParamField body="file" type="file">
+  Optional file attachment. Accepted MIME types: `application/pdf`, `image/jpeg`, `image/png`, `image/svg+xml`, `application/zip`, `application/postscript`. Maximum size: 25 MB.
+</ParamField>
+
+<ParamField body="fileKind" type="string" default="design">
+  Category of the uploaded file. One of: `design`, `brief`, `proof`, `final`, `other`.
+</ParamField>
+
+### Payload schema
+
+The `payload` part must be a JSON string with the following fields:
+
+<ParamField body="name" type="string" required>
+  Customer full name. Between 2 and 80 characters.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Customer email address. Maximum 120 characters.
+</ParamField>
+
+<ParamField body="phone" type="string">
+  Customer phone number. Optional.
+</ParamField>
+
+<ParamField body="company" type="string">
+  Company or organisation name. Optional.
+</ParamField>
+
+<ParamField body="message" type="string">
+  Free-text message or brief description of the job. Maximum 4,000 characters.
+</ParamField>
+
+<ParamField body="categorySlug" type="string" required>
+  Slug of the product category (e.g. `gran-formato`). Between 1 and 120 characters.
+</ParamField>
+
+<ParamField body="product" type="object" required>
+  Product information.
+
+  <Expandable title="product fields">
+    <ParamField body="product.name" type="string" required>
+      Product name. Between 1 and 200 characters.
+    </ParamField>
+    <ParamField body="product.slug" type="string">
+      Product slug. Optional.
+    </ParamField>
+    <ParamField body="product.sku" type="string">
+      Product SKU. Optional.
+    </ParamField>
+    <ParamField body="product.url" type="string">
+      Canonical product URL. Optional.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="extras" type="object">
+  Arbitrary key-value pairs for product-specific form fields (e.g. dimensions, quantity). Defaults to `{}`.
+</ParamField>
+
+<ParamField body="consent" type="boolean" required>
+  Must be `true`. The form requires explicit GDPR consent before submission.
+</ParamField>
+
+<ParamField body="sourceUrl" type="string" required>
+  Full URL of the page where the form was submitted. Between 1 and 300 characters.
+</ParamField>
+
+<ParamField body="utm" type="object">
+  UTM tracking parameters (e.g. `utm_source`, `utm_medium`). Optional.
+</ParamField>
+
+<ParamField body="initialStatus" type="string">
+  Initial status to write to the CRM list. Defaults to `"Nova"` if not provided.
+</ParamField>
+
+<ParamField body="website" type="string">
+  Honeypot field. Leave empty. If this field has any value the server silently returns `200 OK` without creating a record.
+</ParamField>
+
+## Response
+
+### 200 OK
+
+<ResponseField name="ok" type="boolean" required>
+  `true` when the request was accepted.
+</ResponseField>
+
+<ResponseField name="duplicated" type="boolean" required>
+  `true` if an identical request (same email + product) was already registered.
+</ResponseField>
+
+<ResponseField name="itemId" type="string" required>
+  SharePoint List item ID of the created (or existing) record.
+</ResponseField>
+
+<ResponseField name="requestKey" type="string" required>
+  Unique request key used to name the attachment folder (e.g. `pr-2026-03-abc123`).
+</ResponseField>
+
+<ResponseField name="file" type="object | null">
+  File upload result, or `null` if no file was attached.
+
+  <Expandable title="file fields">
+    <ResponseField name="file.driveItemId" type="string">
+      Microsoft Graph Drive item ID of the uploaded file.
+    </ResponseField>
+    <ResponseField name="file.webUrl" type="string">
+      SharePoint web URL of the uploaded file.
+    </ResponseField>
+    <ResponseField name="file.name" type="string">
+      Stored filename.
+    </ResponseField>
+    <ResponseField name="file.mimeType" type="string">
+      MIME type of the uploaded file.
+    </ResponseField>
+    <ResponseField name="file.size" type="number">
+      File size in bytes.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  Human-readable confirmation message (in Catalan).
+</ResponseField>
+
+### Error responses
+
+| Status | Cause |
+|---|---|
+| `400` | Missing or invalid payload, failed Zod validation, or `consent` is `false` |
+| `429` | Rate limit exceeded (10 requests per 600 s per IP) |
+| `500` | Upstream SharePoint or email error |
+
+## Example
+
+```javascript
+const payload = {
+  name: "Maria García",
+  email: "maria@empresa.cat",
+  phone: "+34 600 123 456",
+  company: "Empresa S.L.",
+  message: "Necesitamos 500 flyers A5 a doble cara.",
+  categorySlug: "impresion-digital",
+  product: {
+    name: "Flyers A5",
+    slug: "flyers-a5",
+    sku: "FLY-A5",
+    url: "https://reprodisseny.com/productos/flyers-a5",
+  },
+  extras: { quantity: 500, paperWeight: "135g" },
+  consent: true,
+  sourceUrl: "https://reprodisseny.com/productos/flyers-a5",
+  utm: { utm_source: "google", utm_medium: "cpc" },
+}
+
+const formData = new FormData()
+formData.append("payload", JSON.stringify(payload))
+
+// Optionally attach a file
+const file = document.querySelector('input[type="file"]').files[0]
+if (file) {
+  formData.append("file", file, file.name)
+  formData.append("fileKind", "brief")
+}
+
+const res = await fetch("/api/price-requests", {
+  method: "POST",
+  body: formData,
+})
+
+const data = await res.json()
+// { ok: true, duplicated: false, itemId: "42", requestKey: "pr-...", file: null, message: "..." }
+```
+
+## Vue composable
+
+The `usePriceRequests` composable wraps this endpoint and manages loading/error state:
+
+```typescript
+import { usePriceRequests } from "@/composables/usePriceRequests"
+
+const { sendPriceRequest, isLoading, error, success } = usePriceRequests()
+
+await sendPriceRequest(payload, {
+  endpoint: "/api/price-requests",
+  file: selectedFile,       // File | null
+  fileKind: "design",       // "design" | "brief" | "proof" | "final" | "other"
+})
+```
+
+The composable appends the payload as JSON to a `FormData` object and uses `$fetch` with `method: "POST"`. Toast notifications (via `vue-sonner`) are shown automatically for loading, success, and error states.

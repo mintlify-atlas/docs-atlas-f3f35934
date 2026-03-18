@@ -1,0 +1,89 @@
+---
+title: "Color Profiles and Color Management"
+description: "Understanding CMYK, RGB, and Pantone for professional print results."
+---
+
+Color management is one of the most common sources of print surprises. A file that looks vibrant on screen can print significantly differently if the colour mode is wrong or the profile is mismatched. This page explains how colour works in professional printing and what you need to do to get predictable results.
+
+## CMYK: the print colour model
+
+Print presses reproduce colour by mixing four inks: **Cyan**, **Magenta**, **Yellow**, and **Black** (K). This is called the CMYK model.
+
+Every print job at Reprodisseny is produced in CMYK. You should:
+
+- Set your document colour mode to **CMYK** before you start designing.
+- Export your final PDF in CMYK.
+- Check that all placed images are also CMYK (or greyscale).
+
+<Tip>
+  In Adobe InDesign, go to **File → Document Setup** and confirm the intent is set to Print. In Illustrator, check **File → Document Color Mode → CMYK Color**. In Photoshop, use **Image → Mode → CMYK Color**.
+</Tip>
+
+## RGB files: what happens when you send them
+
+RGB (Red, Green, Blue) is the colour model used by screens — monitors, phones, and cameras all work in RGB. The RGB colour space is larger than CMYK, meaning some colours that exist in RGB cannot be reproduced faithfully on a press.
+
+<Warning>
+  If you send an RGB file, it will be converted to CMYK before printing. This conversion is automatic and may produce noticeable colour shifts — particularly for:
+
+  - **Saturated blues** — vivid screen blues often become noticeably more muted in CMYK.
+  - **Bright greens and oranges** — some neon or fluorescent shades are outside the CMYK gamut entirely.
+  - **Skin tones** — subtle RGB gradients can shift unexpectedly after conversion.
+
+  Always convert to CMYK yourself so you can see and control the result before it goes to press.
+</Warning>
+
+## Pantone: spot colour references
+
+Pantone is a standardized colour-matching system. Each Pantone colour has a reference number (for example, Pantone 286 C for a specific shade of blue) and a precise ink formula.
+
+Use Pantone references when:
+
+- You have a strict brand colour that must match exactly across different print runs or materials.
+- You are printing on a substrate where CMYK mixing produces inconsistent results.
+- Your brand guidelines specify Pantone values.
+
+In most Reprodisseny digital print jobs, Pantone colours are converted to CMYK equivalents. Note your Pantone references in the quote request message so the team can advise whether spot printing is required for your job.
+
+<Note>
+  Pantone-to-CMYK conversions are approximations. The printed result will be close but may not be a perfect match. For exact Pantone reproduction, ask about spot colour printing options.
+</Note>
+
+## Rich black and small text
+
+A common mistake is using a **rich black** (a CMYK mix such as C60 M40 Y40 K100) for small text or fine lines. Rich black is formed from multiple ink layers, and even a tiny misalignment between ink passes (misregistration) makes the text appear blurry or fringed.
+
+**Rules for black in print:**
+
+| Usage | Recommended value |
+|-------|------------------|
+| Body text, small headlines, fine lines | 100% K only (C0 M0 Y0 K100) |
+| Large solid backgrounds (over ~40mm wide) | Rich black mix acceptable (e.g. C40 M30 Y30 K100) |
+| Black-and-white photography | Greyscale mode, not CMYK black |
+
+<Tip>
+  Set your application's default black swatch to 100% K for text. Only use a rich black mix for large filled areas where depth and density matter.
+</Tip>
+
+## ICC profiles
+
+An ICC (International Color Consortium) profile is a data file that describes how a specific device or ink set reproduces colour. When embedded in a PDF, it tells the RIP (Raster Image Processor) exactly how to interpret the file's colour values.
+
+For most Reprodisseny jobs, a standard CMYK workflow is sufficient and no custom ICC profile is needed. However:
+
+- If your job requires colour-critical output (for example, fine art reproduction or branded retail displays), ask the team about available ICC profiles for the specific substrate and press.
+- If your file includes an embedded ICC profile, leave it embedded — do not strip it before sending.
+- Avoid embedding RGB ICC profiles in files intended for print.
+
+## Working with brand colours
+
+<Tip>
+  Build a swatch library in your design application with your brand's CMYK values. This prevents accidental use of RGB or incorrect CMYK approximations across different documents and designers.
+</Tip>
+
+Practical steps for consistent brand colour:
+
+1. Obtain your brand's CMYK values from your brand guidelines or from a printed reference approved by your brand team.
+2. Create named swatches in InDesign, Illustrator, or Photoshop using those exact CMYK values.
+3. If your guidelines only provide Pantone or hex values, use the application's colour picker to find the nearest CMYK equivalent, then confirm the result against a printed proof before full production.
+4. Note any critical Pantone references in the message field of your quote request.

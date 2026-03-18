@@ -1,122 +1,117 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Reprodisseny",
+  "theme": "almond",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#1c1c1b",
+    "light": "#0474b3",
+    "dark": "#1c1c1b"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "https://media.brand.dev/4f5cc741-d3c0-4081-ab35-3e3db143ee6e.png",
+  "logo": {
+    "light": "https://media.brand.dev/e01442c7-81d6-4278-aa6e-222c6acae6d6.svg",
+    "dark": "https://media.brand.dev/e01442c7-81d6-4278-aa6e-222c6acae6d6.svg"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/devRepro/reprodisseny"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/devRepro/reprodisseny"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Overview",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Introduction",
+            "pages": ["introduction", "quickstart"]
+          },
+          {
+            "group": "About",
+            "pages": ["about/company", "about/values", "about/clients"]
+          }
+        ]
+      },
+      {
+        "tab": "Services",
+        "groups": [
+          {
+            "group": "Product Categories",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "services/overview",
+              "services/gran-formato",
+              "services/plv-displays",
+              "services/vinilos",
+              "services/impresion-digital",
+              "services/packaging",
+              "services/libros-revistas"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Process",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "services/how-it-works",
+              "services/file-preparation"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Guides",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Getting Started",
             "pages": [
-              "api-reference/introduction"
+              "guides/request-quote",
+              "guides/file-preparation",
+              "guides/color-profiles"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Technical Reference",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "guides/bleed-margins",
+              "guides/resolution",
+              "guides/pdf-export"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Developer",
+        "groups": [
+          {
+            "group": "Architecture",
+            "pages": [
+              "developer/overview",
+              "developer/tech-stack",
+              "developer/local-setup"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "developer/sharepoint-cms",
+              "developer/azure-storage",
+              "developer/email-notifications"
+            ]
+          },
+          {
+            "group": "API Reference",
+            "pages": [
+              "developer/api/price-requests",
+              "developer/api/categorias",
+              "developer/api/search"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

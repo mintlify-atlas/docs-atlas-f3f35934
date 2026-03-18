@@ -1,0 +1,131 @@
+---
+title: "GET /api/search/suggest"
+description: "Fuzzy autocomplete search across products and categories."
+---
+
+Returns ranked autocomplete suggestions matching a search term across published products and categories. Results are cached in Nitro server storage for 5 minutes per unique query.
+
+**Method:** `GET`  
+**Path:** `/api/search/suggest`  
+**Caching:** 5 minutes in-memory (Nitro storage)
+
+<Info>
+  Search is powered by a lightweight scoring function that ranks results by prefix match (score 100) and substring match (score 50). Diacritics are normalised so that `"gran"` matches `"Gran Formato"` and `"Gràfic"`.
+</Info>
+
+## Query parameters
+
+<ParamField query="q" type="string" required>
+  Search term. Whitespace is trimmed. Returns an empty result set when blank.
+</ParamField>
+
+<ParamField query="limit" type="number" default="8">
+  Maximum number of results to return. Clamped between 1 and 30.
+</ParamField>
+
+<ParamField query="force" type="string">
+  Set to `"1"` to bypass the Nitro cache and force a fresh search. Useful for testing.
+</ParamField>
+
+## Response
+
+### 200 OK
+
+<ResponseField name="q" type="string" required>
+  The raw search term from the request.
+</ResponseField>
+
+<ResponseField name="items" type="object[]" required>
+  Array of matching items, ordered by score (products before categories at equal score).
+
+  <Expandable title="item fields">
+    <ResponseField name="id" type="string">
+      Unique identifier for the item (SharePoint ID, slug, or path).
+    </ResponseField>
+    <ResponseField name="kind" type="string">
+      Type of result: `"producto"` or `"categoria"`.
+    </ResponseField>
+    <ResponseField name="title" type="string">
+      Display title of the product or category.
+    </ResponseField>
+    <ResponseField name="href" type="string">
+      Root-relative path for the result page (e.g. `/productos/flyers-a5` or `/categorias/gran-formato`).
+    </ResponseField>
+    <ResponseField name="image" type="string | null">
+      Image URL from Azure Blob CDN, or `null` if not available.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Scoring and ranking
+
+The scoring function normalises both the search term and candidate titles to lowercase NFD form before comparing:
+
+```typescript
+function score(title: string, term: string): number {
+  const t = normText(title)   // lowercase + remove diacritics
+  if (!t) return 0
+  if (t.startsWith(term)) return 100   // prefix match
+  if (t.includes(term)) return 50      // substring match
+  return 0                             // no match
+}
+```
+
+Results with score `0` are excluded. Within the same score tier, results are sorted alphabetically by title. Products appear before categories in the final merged list.
+
+## Filtering
+
+Only items that pass both conditions are included in the search pool:
+
+- `isPublished !== false`
+- `hidden !== true`
+
+Categories must additionally have `showInNav !== false`.
+
+## Caching
+
+Results are stored in Nitro's `cache` storage layer with a 5-minute TTL:
+
+```typescript
+const cacheKey = `search:suggest:${term}:${limit}`
+await storage.setItem(cacheKey, payload, { ttl: 60 * 5 })
+```
+
+Use `?force=1` to bypass the cache during development.
+
+## Example
+
+```bash
+curl "https://reprodisseny.com/api/search/suggest?q=gran&limit=5"
+```
+
+```json
+{
+  "q": "gran",
+  "items": [
+    {
+      "id": "gran-formato",
+      "kind": "categoria",
+      "title": "Gran Formato",
+      "href": "/categorias/gran-formato",
+      "image": "https://webcms.blob.core.windows.net/media/categories/gran-formato.jpg"
+    },
+    {
+      "id": "lonas-gran-formato",
+      "kind": "producto",
+      "title": "Lonas Gran Formato",
+      "href": "/productos/lonas-gran-formato",
+      "image": null
+    }
+  ]
+}
+```
+
+## Triggering search from Vue
+
+```typescript
+const results = await $fetch("/api/search/suggest", {
+  query: { q: searchQuery.value, limit: 8 },
+})
+// results.items -> SuggestItem[]
+```

@@ -1,0 +1,116 @@
+---
+title: File Preparation
+description: Everything you need to prepare print-ready files for any product.
+---
+
+Sending a correctly prepared file is the single most effective way to avoid delays, unexpected costs, and color surprises. This page summarizes the four main areas to check before submitting any print file to Reprodisseny.
+
+<Info>
+  For the full technical reference — including per-product specifications, ICC profiles, and software-specific export guides — see the [File Preparation Guide](/guides/file-preparation).
+</Info>
+
+## The four areas to check
+
+<Steps>
+  <Step title="Bleed and margins">
+    **Bleed** is the extra artwork that extends beyond the trim edge. It ensures no white gap appears after cutting, even if the sheet shifts slightly in the press or cutter.
+
+    - Add **3mm of bleed** on all sides (extend your background, color, or image 3mm past the intended trim edge)
+    - Maintain a **safety zone of 3–5mm** inside the trim edge — keep all text, logos, and important content within this zone
+    - Avoid placing any important element right at the cut line — small cutting tolerances mean edge elements may be partially trimmed
+
+    For large-format products (banners, floor graphics), bleed requirements are larger — typically 10–30mm. Confirm with our team.
+  </Step>
+  <Step title="Color and inks">
+    All files submitted for print must be in **CMYK color mode**. Files received in RGB will be converted, and the color shift can be significant — especially for saturated blues, oranges, and brand colors.
+
+    - Work in **CMYK** from the start of your design, not as a final conversion
+    - For brand-critical colors (a specific corporate blue, a red that must match across all materials), include **Pantone references** so we can evaluate the closest CMYK mix or discuss a spot color option
+    - For fine text and thin rules, use **100% K black only** — avoid rich black (e.g., C60 M40 Y40 K100) on body text or small type, as slight color registration shifts make it appear blurry
+    - Rich black is acceptable for large solid areas (backgrounds, titles above 24pt)
+  </Step>
+  <Step title="Images and resolution">
+    Low-resolution images are the most common cause of poor print quality. On screen, a 72 ppi image may look sharp — at print, the same image will appear visibly soft or pixelated.
+
+    - Use images at **300 ppi at the final print size** (not at 300 ppi at a small size then scaled up in layout)
+    - **Embed all linked images** in your PDF before exporting — missing linked files are a frequent cause of production delays
+    - Avoid placing a small image in a large frame and scaling it up in the layout application — the ppi drops proportionally with scale
+    - Screenshots and web images (72 ppi) are never suitable for print unless the final print size is very small (less than 5cm)
+  </Step>
+  <Step title="Fonts">
+    If fonts are not embedded or converted, any text in your file may reflow, substitute, or simply fail to render when opened on a different system.
+
+    - **Convert all fonts to outlines** before exporting to PDF — this eliminates font dependency entirely
+    - If converting to outlines is not possible, ensure all fonts are **fully embedded** in the exported PDF (verify using Acrobat Pro's preflight tool)
+    - After exporting, open the PDF and **visually check** all text — especially headlines, captions, and any text that uses decorative or unusual typefaces
+    - Check **leading (line spacing) and kerning** after export — some applications alter spacing during PDF generation
+    - Do not use **trial or unlicensed fonts** in production files — they are typically incomplete and may not embed correctly
+  </Step>
+</Steps>
+
+## Export specifications
+
+Use these settings when exporting your final PDF for submission:
+
+| Setting | Recommended value |
+|---|---|
+| **File format** | PDF (PDF/X-1a or PDF/X-4 preferred) |
+| **Color profile** | CMYK — embed ICC profile if using color management |
+| **Bleed** | 3mm on all sides (confirm for large format) |
+| **Crop marks** | Include if the file has bleed |
+| **Resolution** | 300 ppi for all images at final size |
+| **Transparencies** | Flatten before export if using older RIP workflows |
+| **Font embedding** | Embed all fonts, or convert to outlines |
+| **Compression** | Use "Press Quality" or equivalent — avoid aggressive JPEG compression |
+
+<Warning>
+  Avoid submitting files in Word, PowerPoint, or Publisher for print. These applications do not support CMYK color, cannot embed fonts reliably, and produce unpredictable PDF output. Always export from a professional layout application (InDesign, Illustrator, QuarkXPress) or from PDF-native tools.
+</Warning>
+
+## Pre-submission checklist
+
+Run through this checklist before sending your file:
+
+- [ ] File is exported as PDF
+- [ ] Color mode is CMYK throughout
+- [ ] All images are at 300 ppi at final print size
+- [ ] All images are embedded (no missing links)
+- [ ] All fonts are converted to outlines or fully embedded
+- [ ] 3mm bleed is present on all sides
+- [ ] All important content is at least 3–5mm inside the trim edge
+- [ ] No important elements are placed at or beyond the cut line
+- [ ] Transparencies are flattened (if required)
+- [ ] File has been visually checked after export (not just before)
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Do I need to include crop marks?">
+    If your file has bleed, include crop marks. If you're submitting a PDF at exact trim size with no bleed (e.g., a digital-only flyer that also happens to be printed), crop marks are optional but helpful. When in doubt, include them — we can remove them if not needed.
+  </Accordion>
+  <Accordion title="What bleed should I use?">
+    The standard for small-format digital print is **3mm** on all sides. For large-format products — banners, floor graphics, outdoor panels — bleed can be 10–30mm depending on the finishing method. If you're unsure, confirm the bleed requirement when you request your quote, before preparing the file.
+  </Accordion>
+  <Accordion title="Why can't I use RGB? My screen looks fine.">
+    Screens use RGB (red, green, blue) light to create color. Printing uses CMYK (cyan, magenta, yellow, black) inks. The RGB gamut is wider than CMYK — colors that appear vivid on screen (especially electric blues, bright oranges, and neon greens) cannot be reproduced exactly in print. Converting at the end of the process introduces unpredictable shifts. Start in CMYK.
+  </Accordion>
+  <Accordion title="What resolution do I need for large-format printing?">
+    For large-format, resolution requirements are lower than small-format because viewing distance is greater:
+    - Close viewing (&lt;1m): 150–200 ppi at final print size
+    - Trade show / retail (1–3m): 100–150 ppi
+    - Outdoor / building graphics (&gt;3m): 72–100 ppi
+
+    The key is that resolution is always measured **at the final print size**, not at the file's canvas size.
+  </Accordion>
+  <Accordion title="Can I send my file for review before confirming the order?">
+    Yes. We offer a pre-press file check as part of every confirmed order, and we can also review files before final commitment on larger or complex projects. Contact our team to arrange a file review.
+  </Accordion>
+</AccordionGroup>
+
+## Full technical reference
+
+For software-specific export guides, ICC profiles, and per-product technical specs, see the complete guide:
+
+<Card title="File Preparation Guide" icon="book-open" href="/guides/file-preparation">
+  Step-by-step export instructions for InDesign, Illustrator, and Photoshop, plus advanced topics like color profiles and imposition.
+</Card>

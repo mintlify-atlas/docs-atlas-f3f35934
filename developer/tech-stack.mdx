@@ -1,0 +1,94 @@
+---
+title: "Technology stack"
+description: "Libraries, frameworks, and services used in the Reprodisseny platform."
+---
+
+## Frontend
+
+| Package | Version | Purpose |
+|---|---|---|
+| `nuxt` | ^4.3.1 | Full-stack Vue framework (SSG/ISR/Nitro) |
+| `vue` | ^3.5.22 | UI component model |
+| `typescript` | ^5.9.3 | Static typing |
+| `tailwindcss` | ^3.4.17 | Utility-first CSS |
+| `shadcn-nuxt` | pkg.pr.new@1418 | Headless UI component collection |
+| `reka-ui` | ^2.9.2 | Accessible primitive components |
+| `@nuxt/ui` | ^4.0.1 | Nuxt-native UI module |
+| `@nuxt/icon` | ^1.11.0 | Icon rendering (Lucide + Tabler) |
+| `lucide-vue-next` | ^0.487.0 | Icon library |
+| `@motionone/vue` | ^10.16.4 | Animation |
+| `embla-carousel-vue` | ^8.6.0 | Carousel/slider |
+| `vue-sonner` | ^2.0.9 | Toast notifications |
+| `@fontsource/figtree` | ^5.2.10 | Self-hosted font |
+
+## State and routing
+
+| Package | Version | Purpose |
+|---|---|---|
+| `pinia` | ^3.0.2 | Global state management |
+| `@pinia/nuxt` | ^0.11.0 | Nuxt integration for Pinia |
+| `vue-router` | ^4.6.4 | Client-side routing |
+| `@vueuse/core` | ^13.9.0 | Vue composable utilities |
+
+## Content and search
+
+| Package | Version | Purpose |
+|---|---|---|
+| `@nuxt/content` | ^3.7.1 | File-based content layer (MDX/JSON) |
+| `fuse.js` | ^7.1.0 | Fuzzy search for products and categories |
+| `markdown-it` | ^14.1.0 | Markdown rendering |
+| `js-yaml` | ^4.1.0 | YAML parsing |
+| `fast-glob` | ^3.3.3 | File-system globbing |
+
+## Forms and validation
+
+| Package | Version | Purpose |
+|---|---|---|
+| `zod` | ^3.25.76 | Schema validation (server + client) |
+| `vee-validate` | ^4.15.1 | Vue form validation |
+| `@vee-validate/zod` | ^4.15.1 | Zod adapter for vee-validate |
+
+## Azure / Microsoft Graph
+
+| Package | Version | Purpose |
+|---|---|---|
+| `@azure/identity` | ^4.13.0 | Azure credential management (client secret) |
+| `@microsoft/microsoft-graph-client` | ^3.0.7 | SharePoint Lists, Drive, and email via Graph |
+| `isomorphic-fetch` | ^3.0.0 | Fetch polyfill for sync scripts |
+
+## Email
+
+| Package | Version | Purpose |
+|---|---|---|
+| `@sendgrid/mail` | ^8.1.5 | SendGrid transactional email |
+
+SMTP is also supported as an alternative provider; see [Email notifications](/developer/email-notifications).
+
+## Storage and data
+
+| Package | Version | Purpose |
+|---|---|---|
+| `better-sqlite3` | ^12.4.1 | Embedded SQLite for IP rate limiting |
+| `@nuxt/image` | 1.9.0 | Image optimisation with Azure Blob domain allowlist |
+| `sharp` | ^0.34.5 | Server-side image processing |
+
+## Build and dev tooling
+
+| Package | Version | Purpose |
+|---|---|---|
+| `nuxi` | ^3.28.0 | Nuxt CLI |
+| `vite` | ^6.3.3 | Dev server and bundler |
+| `dotenv` | ^17.3.1 | `.env` loading in sync scripts |
+| `exceljs` / `xlsx` | ^4.4.0 / 0.20.3 | Spreadsheet import tooling |
+| `sass` | 1.85.1 | SCSS preprocessing |
+| `postcss` / `autoprefixer` | ^8.5.3 / ^10.4.21 | CSS post-processing |
+| `rimraf` | ^6.1.3 | Cross-platform file deletion |
+
+## SEO
+
+| Package | Version | Purpose |
+|---|---|---|
+| `@nuxtjs/seo` | ^3.0.3 | Meta tags, robots, structured data |
+| `@nuxtjs/sitemap` | ^7.4.7 | Auto-generated XML sitemap |
+| `@nuxtjs/robots` | ^5.5.5 | `robots.txt` configuration |
+| `@nuxtjs/color-mode` | ^3.5.2 | Light/dark mode (currently locked to `light`) |
