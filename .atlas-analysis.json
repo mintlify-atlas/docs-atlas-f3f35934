@@ -1,0 +1,126 @@
+{
+  "projectType": "saas",
+  "projectName": "Reprodisseny",
+  "projectDescription": "Professional digital printing and graphic communication services platform based in Barcelona, offering large-format printing, PLV, vinyls, calendars, and more with expert consulting and an online quote request system.",
+  "theme": "almond",
+  "primaryColor": "#1c1c1b",
+  "lightColor": "#0474b3",
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Overview",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": ["introduction", "quickstart"]
+          },
+          {
+            "group": "About",
+            "pages": ["about/company", "about/values", "about/clients"]
+          }
+        ]
+      },
+      {
+        "tab": "Services",
+        "groups": [
+          {
+            "group": "Product Categories",
+            "pages": [
+              "services/overview",
+              "services/gran-formato",
+              "services/plv-displays",
+              "services/vinilos",
+              "services/impresion-digital",
+              "services/packaging",
+              "services/libros-revistas"
+            ]
+          },
+          {
+            "group": "Process",
+            "pages": [
+              "services/how-it-works",
+              "services/file-preparation"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "guides/request-quote",
+              "guides/file-preparation",
+              "guides/color-profiles"
+            ]
+          },
+          {
+            "group": "Technical Reference",
+            "pages": [
+              "guides/bleed-margins",
+              "guides/resolution",
+              "guides/pdf-export"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Developer",
+        "groups": [
+          {
+            "group": "Architecture",
+            "pages": [
+              "developer/overview",
+              "developer/tech-stack",
+              "developer/local-setup"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "developer/sharepoint-cms",
+              "developer/azure-storage",
+              "developer/email-notifications"
+            ]
+          },
+          {
+            "group": "API Reference",
+            "pages": [
+              "developer/api/price-requests",
+              "developer/api/categorias",
+              "developer/api/search"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Online quote request system with file upload support",
+    "Product catalog with categories and filtering (Nuxt Content + SharePoint CMS)",
+    "SharePoint/Microsoft Graph integration for CRM and content management",
+    "Large-format printing services including vinyls, PLV, and displays",
+    "Azure Blob Storage for media assets",
+    "SEO-optimized product pages with ISR caching",
+    "Contact forms with SendGrid/SMTP email notifications",
+    "Google Reviews integration",
+    "File preparation guide with checklists for print-ready files",
+    "Rate-limited API with honeypot bot protection"
+  ],
+  "publicApiSurface": [
+    "POST /api/price-requests — Submit quote request with optional file attachment",
+    "GET /api/categorias — List product categories from SharePoint CMS",
+    "GET /api/nav — Navigation structure",
+    "GET /api/search — Full-text product/category search",
+    "GET /api/places — Google Reviews and place info",
+    "GET /api/home — Home page featured categories",
+    "GET /api/cms/* — CMS content endpoints",
+    "usePriceRequests() composable — Client-side quote form state and submission",
+    "useProductsCatalog() composable — Product listing with filter, sort, search",
+    "useHomeCategoriesGrid() composable — Home page category grid",
+    "useCategoriasNav() composable — Category navigation tree",
+    "useSeoContent() composable — SEO metadata helpers"
+  ]
+}
